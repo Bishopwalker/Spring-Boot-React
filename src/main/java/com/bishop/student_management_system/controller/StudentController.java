@@ -4,11 +4,13 @@ import com.bishop.student_management_system.entity.Student;
 import com.bishop.student_management_system.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -52,5 +54,17 @@ public class StudentController {
     public void deleteStudent(@PathVariable Long id){
         log.info("Deleting student with id {}", id);
         studentService.deleteStudent(id);
+    }
+
+    //Pagination
+    @GetMapping("/students/page/{page}/{size}")
+    public Page<Student> getAllStudentsPaged(@PathVariable int page, @PathVariable int size){
+     int pageNumber= page ;
+        int pageSize =size==0?10 : size;
+        log.warn("Page number: {}", pageNumber);
+        log.warn("Page size: {}", pageSize);
+        return studentService.getAllStudentsPaged(pageNumber, pageSize);
+
+
     }
 }

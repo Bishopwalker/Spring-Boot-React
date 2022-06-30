@@ -10,25 +10,48 @@ import Form from "react-bootstrap/Form";
 import {Fragment} from 'react';
 import './DataView.css';
 import StudentForm from "./StudentForm";
+import StudentDropdown from './StudentDropDown'
 
 const DataView = () => {
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [cardTitle, setCardTitle] = useState('');
-
+const [itemNumber, setItemNumber] = useState(0);
+const [pageNumber, setPageNumber] = useState(0);
+const [numberOfPages, setNumberOfPages] = useState(0);
+const [dbSize, setDbSize] = useState(0);
+    const fetchData = async () => {
+        const result = await axios('http://localhost:8080/api/students');
+        console.log(result)
+        setData(result.data);
+        setLoading(false);
+    }
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios('http://localhost:8080/api/students');
-            console.log(result)
-            setData(result.data);
-            setLoading(false);
-        }
+
         fetchData().then(() => {
             const amount = data.length;
            setCardTitle("There are "+amount+" students in the database");
         })
-    },[data.length]);
+    },[]);
+    useEffect(()=>{
+
+    },[pageNumber])
+
+
+    const handlePageNumber =async()=>{
+    setPageNumber(pageNumber+1);
+    }
+
+
+    const handleAmountPerPage =async(num)=>{
+        const result = await axios(`http://localhost:8080/api/students/page/0/${num}`);
+        console.log(result,'handleAmountPerPage')
+      setData(result.data.content);
+        setNumberOfPages(result.data.totalPages);
+        setPageNumber(0);
+        setDbSize(result.data.totalElements);
+    }
 
     const handleDelete = async(id) => {
         await axios.delete(`http://localhost:8080/api/delete/${id}`);
@@ -43,6 +66,7 @@ const DataView = () => {
                        <h1>Student Management System</h1>
                      <StudentForm/>
                    </header>
+                    <StudentDropdown setItemNumber={setItemNumber} handleAmountPerPage={handleAmountPerPage} />
                 </Row>
             </Col>
             <Row>

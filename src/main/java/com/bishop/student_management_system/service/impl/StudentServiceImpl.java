@@ -5,6 +5,8 @@ import com.bishop.student_management_system.exception.StudentException;
 import com.bishop.student_management_system.repository.StudentRepository;
 import com.bishop.student_management_system.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,5 +55,16 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Long id) {
         log.info("Deleting student with id {}", id);
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Student> getAllStudentsPaged(int page, int size) {
+        Page<Student> pageRequest = studentRepository.findAll(PageRequest.of(page, size));
+        log.info("Found {} students", pageRequest.getTotalElements());
+        log.info("{} students per page", pageRequest.getSize());
+        log.info("{} pages", pageRequest.getTotalPages());
+        log.info("page {}",page);
+        log.info("size {}",size);
+        return pageRequest;
     }
 }
