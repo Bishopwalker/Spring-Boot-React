@@ -17,7 +17,7 @@ const StudentForm = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-      await  axios.post('http://localhost:8080/api/students', {
+      await  axios.post('http://localhost:8080/api/students/new', {
             firstName: firstName,
             lastName: lastName,
             email: email

@@ -12,5 +12,6 @@ public interface StudentService {
 
     Student addStudent(Student student);   //add student to database
 
+    void deleteStudent(Long id);
 
 }

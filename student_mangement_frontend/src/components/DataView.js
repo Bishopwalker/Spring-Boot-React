@@ -29,7 +29,11 @@ const DataView = () => {
            setCardTitle("There are "+amount+" students in the database");
         })
     },[data.length]);
-console.log(data);
+
+    const handleDelete = async(id) => {
+        await axios.delete(`http://localhost:8080/api/delete/${id}`);
+        setData(data.filter(item => item.id !== id));
+    }
     return(
 
         <Container>
@@ -44,7 +48,7 @@ console.log(data);
             <Row>
 
 
-                    <Table responsive={true} striped bordered hover variant={'dark'}>
+                    <Table responsive={true} striped bordered hover >
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -55,15 +59,16 @@ console.log(data);
                         </thead>
 
 
-                        <tbody>
+                        <tbody >
                         {data.map((person,index)=>{
                         return(
-                            <Fragment key={index}>
-                        <tr  >
+                           <Fragment>
+                        <tr key={index}  >
                                         <td key={index}>{person.id}</td>
                                 <td>{person.firstName}</td>
                                 <td>{person.lastName}</td>
                                 <td>{person.email}</td>
+                            <Button onClick={()=>handleDelete(person.id)} variant="danger">Delete</Button>
                             </tr>
                             </Fragment>)
                         })}
